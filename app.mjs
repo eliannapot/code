@@ -11,7 +11,6 @@ app.set('view engine', 'hbs');
 
 app.get('/', (req, res) => {
     try {
-        console.log("okay")
         res.render('layouts/main');
     } catch (error) {
         console.error(error);
