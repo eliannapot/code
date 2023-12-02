@@ -1,18 +1,26 @@
+const fs = require('fs');
 const sqlite = require('better-sqlite3');
 
 const createDatabase = () => {
+  const databaseName = 'smartparking.sqlite';
+  const db = new sqlite(databaseName);
 
-  const databaseName = 'smartparking.sqlite'; //name
-  const db = new sqlite(databaseName); //create empty sqlite file
+  const sqlFile = 'database.sql';
 
-  const sqlFile = 'database.sql'; //get the info
-  const sqlStatements = require('fs').readFileSync(sqlFile, 'utf8'); //run it
+  try {
+    // Read SQL statements from the file
+    const sqlStatements = fs.readFileSync(sqlFile, 'utf8');
 
-  db.exec(sqlStatements); //create database
+    // Execute SQL statements to create the database
+    db.exec(sqlStatements);
 
-  console.log('Database created successfully.');
-
-  db.close();
+    console.log('Database created successfully.');
+  } catch (error) {
+    console.error('Error creating database:', error);
+  } finally {
+    // Close the database connection
+    db.close();
+  }
 };
 
 createDatabase();
