@@ -31,7 +31,6 @@ router.get('/home_faculty', (req, res) => {
 router.get('/home_area', (req, res) => {
     const area="1"
     try {
-        console.log("my area is",area)
         res.render('home_area',{
             area: area})
         } 
