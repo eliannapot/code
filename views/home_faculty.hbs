@@ -1,0 +1,26 @@
+<main>
+    <div class="container">
+        <div class="jumbotron text-center mt-5">
+            <h2 class="lead display-6" style="font-weight: bold;">{{faculty}} Faculty</h2>
+        </div>
+        <div>
+            <p> Select a parking area: </p>
+            <p> (add image here)</p>
+            <form action="/submit" method="post">
+                    <label for="parkingArea">Choose Parking Area:</label>
+                    <select id="parkingArea" name="parkingArea">
+                        <option value="1">Option 1</option>
+                        <option value="2">Option 2</option>
+                        <option value="3">Option 3</option>
+                    </select>
+                    <button type="submit">Submit</button>
+                </form>
+        </div>
+
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.7/handlebars.min.js"></script>
+    
+</main>   
