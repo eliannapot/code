@@ -1,0 +1,9 @@
+body{
+    background-color: #d3f9d8;
+}
+
+@media (max-width: 768px) {
+    #SmartSpotLogo {
+        width: 100px; 
+    }
+}
