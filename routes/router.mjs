@@ -28,4 +28,17 @@ router.get('/home_faculty', (req, res) => {
     }
 });
 
+router.get('/home_area', (req, res) => {
+    const area="1"
+    try {
+        console.log("my area is",area)
+        res.render('home_area',{
+            area: area})
+        } 
+        catch (error) {
+        console.error(error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
 export default router
