@@ -5,19 +5,18 @@
             <h2 class="lead display-6" style="font-weight: bold;">Book Now!</h2>
         </div>
 
-        <!-- Date, Faculty, Time Selection Form -->
+        <!-- Date, Time, Parking Site Selection Form -->
         <form>
+            <div class="form-group mb-3">
+                <label for="facultySelect">Select Parking Site:</label>
+                <select class="form-control" id="facultySelect" required>
+                    <option value="" selected disabled hidden></option>
+                    <option value="site">{{site}}</option>
+                </select>
+            </div>
             <div class="form-group mb-3">
                 <label for="datePicker">Select Date:</label>
                 <input type="date" class="form-control" id="datePicker" required>
-            </div>
-
-            <div class="form-group mb-3">
-                <label for="facultySelect">Select Faculty:</label>
-                <select class="form-control" id="facultySelect" required>
-                    <option value="" selected disabled hidden></option>
-                    <option value="faculty1">Ηλεκτρολόγων Μηχανικών και Τεχνολογίας Υπολογιστών</option>
-                </select>
             </div>
 
             <div class="form-group mb-3">
