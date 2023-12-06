@@ -21,6 +21,8 @@ router.get('/home', async (req,res) => {
     }
 });
 
+
+
 //ΠΡΟΒΛΗΜΑ: 
 //*ΌΤΑΝ ΕΙΜΑΙ ΣΤΟ "/": ΕΝΩ ΚΑΝΕΙ RENDER ΣΤΟ HOME.HBS ΔΕΝ ΚΑΝΕΙ ΚΑΝΕΝΑ CONSOLE LOG ΑΡΑ ΔΕΝ ΔΟΥΛΕΥΕΙ Ο ΚΩΔΙΚΑΣ ΤΟΥ /HOME
 //*ΌΤΑΝ ΕΙΜΑΙ ΣΤΟ "/HOME":ΔΟΥΛΕΥΕΙ ΤΕΛΕΙΑ ΑΛΛΑ ΠΡΕΠΕΙ ΝΑ ΤΟ ΠΑΤΑΩ ΧΕΙΡΟΚΙΝΗΤΑ
@@ -29,15 +31,9 @@ router.get('/home', async (req,res) => {
 
 router.get('/home_faculty', (req, res) => {
     const faculty="ECE"
-    try {
-        console.log("my faculty is",faculty)
-        res.render('home_faculty',{
-            faculty: faculty})
-        } 
-        catch (error) {
-        console.error(error);
-        res.status(500).send('Internal Server Error');
-    }
+    console.log("my faculty is",faculty)
+    res.render('home_faculty',{
+        faculty: faculty})
 });
 
 router.get('/home_area', (req, res) => {
