@@ -1,18 +1,17 @@
 <main>
     <div class="container">
-        <div class="jumbotron text-center my-4">
-            <h2 class="lead display-6" style="font-weight: bold;">Parking Site: {{site}}</h2>
+        <div class="jumbotron text-center my-3">
+            <h3 style="font-weight: bold;">Parking Site: {{site}}</h3>
         </div>
         <div class="row">
             <div class="col-md-6 mx-auto"> 
-                <p class="mt-0">Select a parking spot:</p> <!-- Adjusted margin-top to 0 -->
-                <img src="files\ECE_1.png" id="ECE1" alt="ECE_1" class="img-fluid" style="width: 80%; display: block; margin: 0 auto;"> <!-- Adjusted image centering -->
-                <form class="text-center mt-3"> <!-- Adjusted margin-top -->
-                    <div class="form-group my-4">
+                <img src="files\ECE_1.png" id="ECE1" alt="ECE_1" class="img-fluid" style="width: 80%; display: block; margin: 0 auto;">
+                <form class="text-center"> 
+                    <div class="form-group my-3">
                         <select id="parkingSpot" name="parkingSpot" class="form-control" required>
                         </select>
                     </div>
-                    <button type="submit" class="btn btn-success mt-3">Book the spot!</button>
+                    <button type="submit" class="btn btn-success my-1">Book the spot!</button>
                 </form>
             </div>
         </div>
