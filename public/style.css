@@ -7,3 +7,9 @@ body{
         width: 100px; 
     }
 }
+
+.custom-img-size {
+    max-width: 100%; /* Ensures the image doesn't exceed the column width */
+    height: auto;    /* Allows the image to scale proportionally */
+    width: 160px;
+  }
