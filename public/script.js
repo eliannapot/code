@@ -27,17 +27,17 @@ document.addEventListener("DOMContentLoaded", function () {
 
 //redirect from /home to /home_site when clicking on the "Continue" button
 
-document.addEventListener("DOMContentLoaded", function () {
-    var button = document.getElementById('submitButton');
-    if (button) {
-        button.addEventListener('click', submitForm);
-    }
-});
+// document.addEventListener("DOMContentLoaded", function () {
+//     var button = document.getElementById('submitButton');
+//     if (button) {
+//         button.addEventListener('click', submitForm);
+//     }
+// });
 
 function submitForm() {
     var form = document.getElementById('bookingForm');
     var select = document.getElementById('parkingSpot');
-
+    console.log("Form Submited");
     // Check if the elements are present
     if (!form || !select) {
         return;
