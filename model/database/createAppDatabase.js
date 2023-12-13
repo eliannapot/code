@@ -2,7 +2,7 @@ const fs = require('fs');
 const sqlite = require('better-sqlite3');
 
 const createDatabase = () => {
-  const databaseName = 'smartparking.sqlite';
+  const databaseName = 'smartparkingSDM.sqlite';
   const db = new sqlite(databaseName);
 
   const sqlFile = 'database.sql';
