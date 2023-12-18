@@ -23,20 +23,3 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 });
 
-//*************************************************************************** */
-
-//redirect from /home to /home_site when clicking on the "Continue" button
-
-function submitForm() {
-    var form = document.getElementById('bookingForm');
-
-    if (form.checkValidity()) {
-        window.location.href = '/home_site';
-    } else {
-        alert("Please fill in all the required fields.");
-    }
-    
-}
-
-
-

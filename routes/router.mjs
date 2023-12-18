@@ -7,8 +7,8 @@ router.get('/', (req, res) => {
 });
 
 router.get('/home', async (req,res) => {
+    const site="ECE_1"
     try{
-        const site="ECE_1"
         res.render('home',{
             site: site
         });
@@ -20,6 +20,7 @@ router.get('/home', async (req,res) => {
 });
 
 router.get('/home_site', (req, res) => {
+    const site="ECE_1"
     try {
         res.render('home_site',{
             site: site})
@@ -28,6 +29,13 @@ router.get('/home_site', (req, res) => {
         console.error(error);
         res.status(500).send('Internal Server Error');
     }
+});
+
+//for POST requests
+router.use(express.urlencoded({extended: true}));
+
+router.post('/home/submit-form', async(req, res) => {
+    res.redirect('/home_site')
 });
 
 export default router
