@@ -1,5 +1,5 @@
 CREATE TABLE User (
-    user_id INTEGER PRIMARY KEY,
+    user_id VARCHAR PRIMARY KEY,
     user_pwd CHAR,
     bt_tag CHAR
 );
