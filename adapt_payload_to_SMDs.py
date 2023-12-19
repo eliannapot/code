@@ -88,15 +88,3 @@ cursor = conn.cursor()
 # Commit the changes and close the connection
 conn.commit()
 conn.close()
-
-
-
-
-
-
-
-
-
-
-
-
