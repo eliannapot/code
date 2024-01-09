@@ -15,12 +15,8 @@ export let getParkingSiteName = () => {
 
 
 export let newSiteDateTime = (user, parkingspot, selectedDate, reservation_code, selectedSite, selectedTime) => {
-    console.log("Inside newSiteDateTime");
     const query = db.prepare('INSERT INTO Booking VALUES (?, ?, ?, ?, ?, ?)');
-//    const query = db.prepare('INSERT INTO Booking VALUES ("dabbis6", null, "2024-12-3", 18281928, "ECE Area 1", "12:00")');
-    console.log("Query okay", query);
     try {
-        console.log(user, parkingspot, selectedDate, reservation_code, selectedSite, selectedTime);
         query.run(user, parkingspot, selectedDate, reservation_code, selectedSite, selectedTime);
         return true;
     }
