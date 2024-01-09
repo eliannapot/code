@@ -12,7 +12,12 @@
                 <label for="facultySelect">Select Parking Site:</label>
                 <select class="form-control" id="facultySelect" required>
                     <option value="" selected disabled hidden></option>
-                    <option value="site">{{site}}</option>
+                    
+                    {{!-- <option value="site">{{site}}</option> --}}
+                    {{#each parkingSiteNames}}
+                        <option value="{{this.name}}">{{this.name}}</option>
+                    {{/each}}
+
                 </select>
             </div>
             <div class="form-group mb-3">

@@ -1,5 +1,5 @@
-const sqlite = require('better-sqlite3');
-const db = new sqlite('../database/smartparking.sqlite');
+import sqlite from 'better-sqlite3';
+const db = new sqlite('model/database/smartparkingSDM.sqlite');
 
 //insert test from db to front
 // 'use strict';
@@ -8,17 +8,17 @@ const db = new sqlite('../database/smartparking.sqlite');
 // const sql = new db('model/database/gymspot.sqlite', { fileMustExist: true });
 // // Τι χρειαζομαι το const sql = new db....
 
-// export let readUser = (user) => {
-//     const stmt = sql.prepare('SELECT * FROM User task WHERE username = ?');
-//     let info;
-//     try {
-//         info = stmt.all(user.username);
-//         return true;
-//     }
-//     catch (err) {
-//         throw err;
-//     }
-// }
+export let getParkingSiteName = () => {
+    const query = db.prepare('SELECT name FROM OffStreetParking');
+    let info;
+    try {
+        info = query.all();
+        return info;
+    }
+    catch (err) {
+        throw err;
+    }
+}
 
 //test from front to db (?)
 // 'use strict';

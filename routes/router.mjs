@@ -1,5 +1,7 @@
 import express from 'express'
 
+const homeController = await import(`../controller/home.mjs`)
+
 const router = express.Router()
 
 router.get('/', (req, res) => {
@@ -9,8 +11,13 @@ router.get('/', (req, res) => {
 router.get('/home', async (req,res) => {
     const site="ECE_1"
     try{
+        const parkingSiteNames = await homeController.showParkingSiteName();
+        console.log('router', parkingSiteNames);
+        console.log(parkingSiteNames[0].name);
         res.render('home',{
-            site: site
+            parkingSiteNames: parkingSiteNames
+
+//            site: parkingSiteNames[0].name
         });
     }
     catch (error) {
