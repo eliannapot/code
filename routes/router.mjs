@@ -12,8 +12,6 @@ router.get('/home', async (req,res) => {
     const site="ECE_1"
     try{
         const parkingSiteNames = await homeController.showParkingSiteName();
-        console.log('router', parkingSiteNames);
-        console.log(parkingSiteNames[0].name);
         res.render('home',{
             parkingSiteNames: parkingSiteNames
 
@@ -41,8 +39,11 @@ router.get('/home_site', (req, res) => {
 //for POST requests
 router.use(express.urlencoded({extended: true}));
 
-router.post('/home/submit-form', async(req, res) => {
-    res.redirect('/home_site')
-});
+router.post('/home/submit-form', homeController.saveSiteDateTime);
+
+// happens in controller actually
+// router.post('/home/submit-form', async(req, res) => {
+//     res.redirect('/home_site')
+// });
 
 export default router

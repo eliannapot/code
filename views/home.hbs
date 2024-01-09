@@ -6,34 +6,36 @@
         </div>
 
         <!-- Date, Time, Parking Site Selection Form -->
-        <form method="post" action="/home/submit-form">
-        {{!-- <form id="bookingForm"> --}}
-            <div class="form-group mb-3">
-                <label for="facultySelect">Select Parking Site:</label>
-                <select class="form-control" id="facultySelect" required>
-                    <option value="" selected disabled hidden></option>
-                    
-                    {{!-- <option value="site">{{site}}</option> --}}
-                    {{#each parkingSiteNames}}
-                        <option value="{{this.name}}">{{this.name}}</option>
-                    {{/each}}
+        <!-- home.hbs -->
 
-                </select>
-            </div>
-            <div class="form-group mb-3">
-                <label for="datePicker">Select Date:</label>
-                <input type="date" class="form-control" id="datePicker" required>
-            </div>
+<form method="post" action="/home/submit-form">
+    <div class="form-group mb-3">
+        <label for="facultySelect">Select Parking Site:</label>
+        <select class="form-control" id="facultySelect" name="selectedSite" required>
+            <option value="" selected disabled hidden></option>
+            
+            {{#each parkingSiteNames}}
+                <option value="{{this.name}}">{{this.name}}</option>
+            {{/each}}
+            
+        </select>
+    </div>
 
-            <div class="form-group mb-3">
-                <label for="timePicker">Select Time:</label>
-                <input type="time" class="form-control" id="timePicker" required>
-            </div>
-            <div class="text-center">
-                {{!-- <a class="nav-link" href="home_site.hbs">Continue</a> --}}
-                <button type="submit" class="btn btn-success">Continue</button>
-            </div>
-        </form>
+    <div class="form-group mb-3">
+        <label for="datePicker">Select Date:</label>
+        <input type="date" class="form-control" id="datePicker" name="selectedDate" required>
+    </div>
+
+    <div class="form-group mb-3">
+        <label for="timePicker">Select Time:</label>
+        <input type="time" class="form-control" id="timePicker" name="selectedTime" required>
+    </div>
+
+    <div class="text-center">
+        <button type="submit" class="btn btn-success">Continue</button>
+    </div>
+</form>
+
 
     </div>
 
