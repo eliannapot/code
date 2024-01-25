@@ -13,31 +13,26 @@ export let getParkingSiteName = () => {
     }
 }
 
-
 export let newSiteDateTime = (user, parkingspot, selectedDate, reservation_code, selectedSite, selectedTime) => {
     const query = db.prepare('INSERT INTO Booking VALUES (?, ?, ?, ?, ?, ?)');
     try {
         query.run(user, parkingspot, selectedDate, reservation_code, selectedSite, selectedTime);
+        // console.log("reservation code is: " + reservation_code)
         return true;
+    }
+    catch (err) {
+        throw err;           
+    }
+}
+
+export let getParkingInformation = (reservation_code) => {
+    const query = db.prepare('SELECT * FROM Booking WHERE reservation_code=?;');
+    let info;
+    try {
+        info = query.all(reservation_code);
+        return info;
     }
     catch (err) {
         throw err;
     }
 }
-
-// import db from 'better-sqlite3'
-// const sql = db('../database/gymspot.sqlite');
-// // Τι χρειαζομαι το const sql = new db....
-
-// export let addUser = (user) => {
-//     const stmt = sql.prepare('INSERT INTO User VALUES (?, ?, ?, 0)');
-//     let info;
-
-//     try {
-//         info = stmt.run(user.username, user.email, user.password);
-//         return true;
-//     }
-//     catch (err) {
-//         throw err;
-//     }
-// }
