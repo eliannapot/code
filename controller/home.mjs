@@ -42,3 +42,11 @@ export async function showParkingSite(reservation) {
     }
     console.log("home.mjs did sth")
 }
+
+
+export async function saveParkingSpot(reservation,req,res) {
+    console.log("home.mjs saveParkingSpot " + req.body.selectedParkingSpot);
+    await model.newSaveParkingSpot(req.body.selectedParkingSpot,reservation);
+  
+    res.redirect('/home')
+}

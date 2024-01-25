@@ -51,15 +51,17 @@ router.post('/home/submit-form',  async (req,res) => {
     } catch (error) {
         console.error(error);
         res.status(500).send('Internal Server Error');
-    }});
+    }
+    console.log("we got submit-form")
+});
 
 router.get('/home_site', async (req,res) => {
     const site="ECE_1" 
     try {
         const site = await homeController.showParkingSite(req.session.reservation_code);
 
-        console.log("site: ", site);
-        console.log("image: ", req.body)
+        //console.log("site: ", site);
+        //console.log("image: ", req.body)
 
         res.render('home_site',{
             site: site[0].refOffStreetParking })
@@ -68,7 +70,16 @@ router.get('/home_site', async (req,res) => {
         console.error(error);
         res.status(500).send('Internal Server Error');
     }
+    console.log("we got home_site")
 });
 
+router.post('/home/submit-success', async (req,res) => {
+    console.log("post to home/submit-success")
+    try {
+        homeController.saveParkingSpot(req.session.reservation_code, req, res);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Internal Server Error');
+    }});
 
 export default router

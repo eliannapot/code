@@ -36,3 +36,16 @@ export let getParkingInformation = (reservation_code) => {
         throw err;
     }
 }
+
+export let newSaveParkingSpot = (parkingspot, reservation_code) => {
+    console.log("parkingspot: ", parkingspot);
+    console.log("reservation_code: ", reservation_code);
+    const query = db.prepare('UPDATE Booking SET refParkingSpot = ? WHERE reservation_code = ?;');
+    try {
+        query.run(parkingspot,reservation_code);
+        return true;
+    }
+    catch (err) {
+        throw err;           
+    }
+}
