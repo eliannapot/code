@@ -80,10 +80,9 @@ cursor = conn.cursor()
 
 # Insert the values into the Device table
 
-# cursor.execute('''
-#     INSERT INTO Device (id, value, dateLastValueReported, type, controlledProperty, deviceCategory)
-#     VALUES (?, ?, ?, ?, ?, ?)
-# ''', (ID, value, dateLastValueReported, TYPE, controlledProperty, deviceCategory))
+#cursor.execute('''INSERT INTO Device (id, value, dateLastValueReported, type, controlledProperty, deviceCategory)
+#VALUES (?, ?, ?, ?, ?, ?)
+ #''', (ID, value, dateLastValueReported, TYPE, controlledProperty, deviceCategory))
 
 # Commit the changes and close the connection
 conn.commit()
