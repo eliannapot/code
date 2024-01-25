@@ -1,3 +1,5 @@
+import { listOfParkingSpots } from './routes/router.mjs';
+
 //create options for parking spots in parking site: ECE1
 document.addEventListener("DOMContentLoaded", function () {
     // Check if the current page is "/home_site"
@@ -12,11 +14,12 @@ document.addEventListener("DOMContentLoaded", function () {
         defaultOption.selected = true;
         select.appendChild(defaultOption);
 
-        // Generate options from Spot 1 to Spot 16
-        for (var i = 1; i <= 16; i++) {
+        // Add the options
+        console.log("listOfParkingSpots: ", listOfParkingSpots);
+        for (var i = 0; i < listOfParkingSpots.length; i++) {
             var option = document.createElement("option");
-            option.value = i;
-            option.text = "Spot " + i;
+            option.value = listOfParkingSpots[i];
+            option.text = listOfParkingSpots[i];
             option.style.fontSize = "16px";
             select.appendChild(option);
         }

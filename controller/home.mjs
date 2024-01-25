@@ -2,8 +2,10 @@ const model = await import(`../model/better-sqlite/better-sqlite.mjs`)
 
 
 //Default User
-let defaultUser = "dabbis6" ; 
+let defaultUser = "Stellini" ; 
 
+
+//To display the correct ECE Areas
 export async function showParkingSiteName() {
     try {
         const parkingSiteName = await model.getParkingSiteName()
@@ -14,7 +16,7 @@ export async function showParkingSiteName() {
     }
 }
 
-
+//To save the selected date,time and site
 export async function saveSiteDateTime(reservation,req,res) {
     
     const selectedSite = req.body.selectedSite;
@@ -31,6 +33,7 @@ export async function saveSiteDateTime(reservation,req,res) {
     res.redirect('/home_site')
 }
 
+//To display the parking site in the big map
 export async function showParkingSite(reservation) {
 
     try {
@@ -43,7 +46,18 @@ export async function showParkingSite(reservation) {
     console.log("home.mjs did sth")
 }
 
+//To display the correct Parking Spots of the Area
+export async function showParkingSpots(parkingArea) {
+    try {
+        const parkingSpots = await model.getParkingSpots(parkingArea)
+        return parkingSpots 
+    } catch(err) {
+        console.log(err);
+//        res.send(err)
+    }
+}
 
+//To save the selected parking spot (completes booking)
 export async function saveParkingSpot(reservation,req,res) {
     console.log("home.mjs saveParkingSpot " + req.body.selectedParkingSpot);
     await model.newSaveParkingSpot(req.body.selectedParkingSpot,reservation);

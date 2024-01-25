@@ -12,6 +12,9 @@
                     <div class="form-group my-3">
                         <select id="parkingSpot" name="selectedParkingSpot" class="form-control" required>
                             {{!-- options are created using JS --}}
+                            {{#each parkingSpots}}
+                                <option value="{{this}}">{{this}}</option>
+                            {{/each}}
                         </select>
                     </div>
                     <button type="submit" class="btn btn-success my-1">Book the spot!</button>

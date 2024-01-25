@@ -37,6 +37,19 @@ export let getParkingInformation = (reservation_code) => {
     }
 }
 
+export let getParkingSpots = (parkingArea) => {
+    const query = db.prepare('SELECT id FROM ParkingSpot WHERE refParkingSite = ?;');
+    let info;
+    try {
+        info = query.all(parkingArea);
+        console.log(info);
+        return info;
+    }
+    catch (err) {
+        throw err;
+    }
+}
+
 export let newSaveParkingSpot = (parkingspot, reservation_code) => {
     console.log("parkingspot: ", parkingspot);
     console.log("reservation_code: ", reservation_code);

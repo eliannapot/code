@@ -5,6 +5,8 @@ const homeController = await import(`../controller/home.mjs`)
 
 const router = express.Router()
 
+let listOfParkingSpots = [];
+
 // Use the express-session middleware
 router.use(session({
     secret: 'secretkey',
@@ -18,10 +20,12 @@ function generateRandomInteger() {
     return randomInteger;
 }
 
+//Default
 router.get('/', (req, res) => {
     res.redirect('/home')
 });
 
+//Gets the parking site names in the home form
 router.get('/home', async (req,res) => {
     const site="ECE_1"
     try{
@@ -42,6 +46,7 @@ router.get('/home', async (req,res) => {
 //for POST requests
 router.use(express.urlencoded({extended: true}));
 
+//Saves site,date,time to db
 router.post('/home/submit-form',  async (req,res) => {
     const reservation_code = generateRandomInteger(); 
     req.session.reservation_code = reservation_code;
@@ -52,26 +57,46 @@ router.post('/home/submit-form',  async (req,res) => {
         console.error(error);
         res.status(500).send('Internal Server Error');
     }
-    console.log("we got submit-form")
 });
+
 
 router.get('/home_site', async (req,res) => {
     const site="ECE_1" 
+
     try {
+        //shows parking area chosen in the header
         const site = await homeController.showParkingSite(req.session.reservation_code);
+        //console.log("found the area: " + site[0].refOffStreetParking);
+        const parkingArea = site[0].refOffStreetParking;
+        
+        // res.render('home_site',{
+        //     site: site[0].refOffStreetParking })
+        
+        //shows parking spots in the dropdown menu
+        const parkingSpotsAvl = await homeController.showParkingSpots(parkingArea);
+        listOfParkingSpots = parkingSpotsAvl.map(parkingSite => parkingSite.id);
 
-        //console.log("site: ", site);
-        //console.log("image: ", req.body)
-
+        
+        // console.log("parkingSpotsAvl: ", parkingSpotsAvl);
+        // console.log("listOfParkingSpots: ", listOfParkingSpots);
+        
         res.render('home_site',{
-            site: site[0].refOffStreetParking })
-        } 
-        catch (error) {
+            site: site[0].refOffStreetParking,
+            parkingSpots: listOfParkingSpots
+        });
+        //console.log("listOfParkingSpots: ", listOfParkingSpots);
+        //return listOfParkingSpots;
+    } 
+    catch (error) {
         console.error(error);
         res.status(500).send('Internal Server Error');
     }
-    console.log("we got home_site")
+
+    
+    
 });
+
+
 
 router.post('/home/submit-success', async (req,res) => {
     console.log("post to home/submit-success")
@@ -82,4 +107,6 @@ router.post('/home/submit-success', async (req,res) => {
         res.status(500).send('Internal Server Error');
     }});
 
-export default router
+
+export default router ; 
+export { listOfParkingSpots };
