@@ -2,7 +2,7 @@ const model = await import(`../model/better-sqlite/better-sqlite.mjs`)
 
 
 //Default User
-let defaultUser = "Stellini" ; 
+let defaultUser = "Elianna" ; 
 
 
 //To display the correct ECE Areas
@@ -59,8 +59,8 @@ export async function showParkingSpots(parkingArea) {
 
 //To save the selected parking spot (completes booking)
 export async function saveParkingSpot(reservation,req,res) {
-    console.log("home.mjs saveParkingSpot " + req.body.selectedParkingSpot);
+    // console.log("home.mjs saveParkingSpot " + req.body.selectedParkingSpot);
     await model.newSaveParkingSpot(req.body.selectedParkingSpot,reservation);
   
-    res.redirect('/home')
+    res.redirect('/reservation')
 }
