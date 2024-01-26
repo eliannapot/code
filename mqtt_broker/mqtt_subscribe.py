@@ -1,5 +1,4 @@
 import json #useful for making message payload to type dictionary (json file)
-import ast #useful for making message payload to type dictionary (json file)
 
 from paho.mqtt import client as mqtt_client
 
@@ -32,7 +31,7 @@ def subscribe(client):
             # Parse JSON data
             payload_dict = json.loads(payload_str)
             #print("payload_dict=",payload_dict)
-            if 'deviceProfileName' in payload_dict and payload_dict['deviceProfileName'] == 'Cicicom S-LG3T':
+            if 'deviceName' in payload_dict and payload_dict['deviceName'] == "cicicom-s-lg3t:2":
                 print("Filtered payload:", payload_dict)
         except json.decoder.JSONDecodeError:
             #print("json.decoder.JSONDecodeError")
