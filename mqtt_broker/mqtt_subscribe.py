@@ -1,4 +1,4 @@
-import json #useful for making message payload to type dictionary (json file)
+import json 
 
 from paho.mqtt import client as mqtt_client
 
@@ -14,10 +14,8 @@ def connect_mqtt():
     port = 1883
     client_id = "elianna"
     client = mqtt_client.Client(client_id)
-    # client.username_pw_set(username, password)
     client.on_connect = on_connect
     client.connect(broker, port)
-    # print(type(client))
     return client
 
 def subscribe(client):
@@ -25,16 +23,16 @@ def subscribe(client):
     def on_message(client, userdata, msg):
        
         # Decode bytes to string
+        print("raw payload:",msg.payload)
         payload_str = msg.payload.decode('utf-8')
         try:
             payload_str = payload_str.replace("'", '"')
             # Parse JSON data
             payload_dict = json.loads(payload_str)
-            #print("payload_dict=",payload_dict)
             if 'deviceName' in payload_dict and payload_dict['deviceName'] == "cicicom-s-lg3t:2":
                 print("Filtered payload:", payload_dict)
         except json.decoder.JSONDecodeError:
-            #print("json.decoder.JSONDecodeError")
+            print("json.decoder.JSONDecodeError")
             pass
 
     client.subscribe(topic)
