@@ -107,6 +107,17 @@ router.post('/home/submit-success', async (req,res) => {
         res.status(500).send('Internal Server Error');
     }});
 
+router.get('/reservation', async (req,res) => {
+    try {
+        //const reservation = await homeController.showReservation(req.session.reservation_code);
+        res.render('reservation',{
+            // reservation: reservation
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Internal Server Error');
+    }
+});
 
 export default router ; 
 export { listOfParkingSpots };
