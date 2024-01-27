@@ -63,3 +63,16 @@ export async function saveParkingSpot(reservation,req,res) {
   
     res.redirect('/reservation')
 }
+
+//To display the parking site in the big map
+export async function showBookingDetails(reservation) {
+
+    try {
+        const bookingDetails = await model.getBookingDetails(reservation);
+        console.log("home.mjs showBookingDetails: ", bookingDetails);
+        return bookingDetails 
+    } catch(err) {
+        console.log(err);
+//        res.send(err)
+    }
+}
