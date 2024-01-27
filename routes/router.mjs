@@ -99,7 +99,7 @@ router.get('/home_site', async (req,res) => {
 
 
 router.post('/home/submit-success', async (req,res) => {
-    console.log("post to home/submit-success")
+    // console.log("post to home/submit-success")
     try {
         homeController.saveParkingSpot(req.session.reservation_code, req, res);
     } catch (error) {

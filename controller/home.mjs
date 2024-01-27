@@ -43,7 +43,6 @@ export async function showParkingSite(reservation) {
         console.log(err);
 //        res.send(err)
     }
-    console.log("home.mjs did sth")
 }
 
 //To display the correct Parking Spots of the Area
