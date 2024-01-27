@@ -65,7 +65,7 @@ payload_dict={
 }
 
 # Extract values from payload
-ID = payload_dict.get('deduplicationId')
+ID = payload_dict.get('devEui')
 value = payload_dict.get('object', {}).get('tag')
 dateLastValueReported = payload_dict.get('time')
 
