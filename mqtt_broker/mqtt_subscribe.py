@@ -19,24 +19,31 @@ def connect_mqtt():
     return client
 
 def subscribe(client):
-    
+    processed_messages = set()  # Set to store processed messages
+
     def on_message(client, userdata, msg):
-        device_name_in_bytes=b'cicicom-s-lg3t:2'
+        device_name_in_bytes = b'cicicom-s-lg3t:2'
         if device_name_in_bytes in msg.payload:
-            print("raw payload:",msg.payload)
+            print("raw payload:", msg.payload)
             # Decode bytes to string
             payload_str = msg.payload.decode('utf-8')
             payload_str = payload_str.replace("'", '"')
             try:
                 # Parse JSON data
                 payload_dict = json.loads(payload_str)
-                print("Filtered payload:", payload_dict)
+                # Check if deduplicationId is in the set of processed messages
+                if payload_dict.get('deduplicationId') not in processed_messages:
+                    processed_messages.add(payload_dict.get('deduplicationId'))
+                    print("Filtered payload:", payload_dict)
+                else:
+                    print("Duplicate message, skipping.")
             except json.decoder.JSONDecodeError:
                 print("json.decoder.JSONDecodeError")
                 pass
 
     client.subscribe(topic)
     client.on_message = on_message
+
 
 def run():  
     client = connect_mqtt()
