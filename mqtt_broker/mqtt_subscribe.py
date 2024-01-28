@@ -21,19 +21,19 @@ def connect_mqtt():
 def subscribe(client):
     
     def on_message(client, userdata, msg):
-       
-        # Decode bytes to string
-        print("raw payload:",msg.payload)
-        payload_str = msg.payload.decode('utf-8')
-        try:
+        device_name_in_bytes=b'cicicom-s-lg3t:2'
+        if device_name_in_bytes in msg.payload:
+            print("raw payload:",msg.payload)
+            # Decode bytes to string
+            payload_str = msg.payload.decode('utf-8')
             payload_str = payload_str.replace("'", '"')
-            # Parse JSON data
-            payload_dict = json.loads(payload_str)
-            if 'deviceName' in payload_dict and payload_dict['deviceName'] == "cicicom-s-lg3t:2":
+            try:
+                # Parse JSON data
+                payload_dict = json.loads(payload_str)
                 print("Filtered payload:", payload_dict)
-        except json.decoder.JSONDecodeError:
-            print("json.decoder.JSONDecodeError")
-            pass
+            except json.decoder.JSONDecodeError:
+                print("json.decoder.JSONDecodeError")
+                pass
 
     client.subscribe(topic)
     client.on_message = on_message
