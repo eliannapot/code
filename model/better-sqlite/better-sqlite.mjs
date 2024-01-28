@@ -63,3 +63,16 @@ export let newSaveParkingSpot = (parkingspot, reservation_code) => {
         throw err;           
     }
 }
+
+export let getBookingDetails = (reservation_code) => {
+    const query = db.prepare('SELECT * FROM Booking WHERE reservation_code=?;');
+    let info;
+    try {
+        info = query.all(reservation_code);
+        console.log("better-sqlite getBookingDetails: ", info);
+        return info;
+    }
+    catch (err) {
+        throw err;
+    }
+}

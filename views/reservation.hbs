@@ -7,13 +7,14 @@
             <div class="col-md-6 mx-auto"> 
                 <div class="text-center">
                     <h4 class="my-3"><u>Booking Details</u></h4>
-                    {{!-- <h4 class="my-3">Parking Spot: {{reservation}}</h4>
-                    <h4 class="my-3">Parking Spot: {{reservation.selectedParkingSpot}}</h4>
-                    <h4 class="my-3">Parking Site: {{site}}</h4>
-                    <h4 class="my-3">Parking Time: {{parkingTime}}</h4> --}}
+                    <h5 class="my-3">User: <i>{{reservation.refUser}}</i></h5>
+                    <h5 class="my-3">Datetime: <i>{{reservation.date}} at {{reservation.time}}</i></h5>
+                    <h5 class="my-3">Parking Spot: <i>{{reservation.refParkingSpot}} in {{reservation.refOffStreetParking}}</i></h5> 
+                    <h5 class="my-3">Reservation Code: <i>{{reservation.reservation_code}}</i></h5>
                 </div>
             </div>
         </div>
+        <h3 style="font-weight: bold;" class="text-center">To make a new reservation go back to the <a href="/home">Home Page</a></h3>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.7/handlebars.min.js"></script>
