@@ -23,6 +23,7 @@ def subscribe(client):
 
     def on_message(client, userdata, msg):
         device_name_in_bytes = b'cicicom-s-lg3t:2'
+        print (msg.payload)
         if device_name_in_bytes in msg.payload:
             print("raw payload:", msg.payload)
             # Decode bytes to string
