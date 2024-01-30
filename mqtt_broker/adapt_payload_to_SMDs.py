@@ -65,8 +65,8 @@ payload_dict={
 }
 
 # Extract values from payload
-ID = payload_dict.get('devEui')
-value = payload_dict.get('object', {}).get('tag')
+device_ID = payload_dict.get('devEui')
+bluetooth_tag = payload_dict.get('object', {}).get('tag')
 dateLastValueReported = payload_dict.get('time')
 
 #Standard Values
@@ -83,8 +83,10 @@ cursor = conn.cursor()
 # cursor.execute('''
 #     INSERT INTO Device (id, value, dateLastValueReported, type, controlledProperty, deviceCategory)
 #     VALUES (?, ?, ?, ?, ?, ?)
-# ''', (ID, value, dateLastValueReported, TYPE, controlledProperty, deviceCategory))
+# ''', (device_ID, bluetooth_tag, dateLastValueReported, TYPE, controlledProperty, deviceCategory))
 
-# Commit the changes and close the connection
+#Update ParkingSpot's status to occupied
+cursor.execute("UPDATE ParkingSpot SET status='occupied' WHERE refDevice=?",(device_ID,))
+
 conn.commit()
 conn.close()
