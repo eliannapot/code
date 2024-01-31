@@ -22,7 +22,7 @@ def subscribe(client):
     processed_messages = set()  # Set to store processed messages
 
     def on_message(client, userdata, msg):
-        device_name_in_bytes = b'cicicom-s-lg3t:2'
+        '''device_name_in_bytes = b'cicicom-s-lg3t:2'
         print(msg.payload)
         if device_name_in_bytes in msg.payload:
             print("raw payload:", msg.payload)
@@ -38,7 +38,19 @@ def subscribe(client):
                     print("Filtered payload:", payload_dict)
             except json.decoder.JSONDecodeError:
                 print("json.decoder.JSONDecodeError")
-                pass
+                pass'''
+        
+        print("raw payload=", msg.payload)
+            # Decode bytes to string
+        payload_str = msg.payload.decode('utf-8')
+        payload_str = payload_str.replace("'", '"')
+        try:
+            # Parse JSON data
+            payload_dict = json.loads(payload_str)
+            print("Filtered payload:", payload_dict)
+        except json.decoder.JSONDecodeError:
+            print("json.decoder.JSONDecodeError")
+            pass
 
     client.subscribe(topic)
     client.on_message = on_message
