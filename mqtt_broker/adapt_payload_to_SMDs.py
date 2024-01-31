@@ -90,6 +90,5 @@ cursor = conn.cursor()
 
 #Update ParkingSpot's status to occupied
 cursor.execute("UPDATE ParkingSpot SET status='occupied' WHERE refDevice=?",(device_ID,))
-
 conn.commit()
 conn.close()

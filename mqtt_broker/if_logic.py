@@ -4,7 +4,7 @@ import time
 import os
 
 #Variables taken from payload
-datetime_from_payload = "2024-01-25T18:23:25.339113601+00:00"
+datetime_from_payload = '2024-01-25T18:23:25.339113601+00:00'
 date_from_payload = datetime_from_payload[:10]
 time_from_payload = datetime_from_payload[11:16]
 bluetooth_tag_from_payload="SVL283"
@@ -49,7 +49,7 @@ else:
                 else:
                     on_time=False
             if (on_time==True):
-                print("The driver parked on time. The light is ON for 2 minutes")
+                print("The driver parked on time. The light is ON for 5 minutes")
                 #Get Streetlight's ID
                 cursor.execute("SELECT id FROM Streetlight WHERE refDevice==?",(device_ID,))
                 streetlight_id_list=cursor.fetchall()
@@ -58,15 +58,17 @@ else:
                 else:
                     streetlight_id=streetlight_id_list[0][0]
                     #Set Streetlight's powerState to 'on'
-                    cursor.execute("UPDATE Streetlight SET powerState='on',dateLastSwitchingOn=? WHERE id=?",(datetime_from_payload, streetlight_id,))
-                    time.sleep(120)  # 2 minutes = 120 seconds
-                    print("2 minutes passed. The light is OFF")
+                    cursor.execute("UPDATE Streetlight SET powerState='on',dateLastSwitchingOn=? WHERE id=?",(datetime_from_payload,streetlight_id),)
+                    conn.commit()
+                    time.sleep(300)  # 5 minutes = 300 seconds
+                    print("5 minutes passed. The light is OFF")
                     #Set Streetlight's powerState to 'off'
                     cursor.execute("UPDATE Streetlight SET powerState='off' WHERE id=?",(streetlight_id,))
+                    conn.commit()
             else:
                 print("The driver didn't park on time. The light stays OFF")
 conn.close()
-conn.close()
+
 
     
                 

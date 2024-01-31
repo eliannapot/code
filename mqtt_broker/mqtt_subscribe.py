@@ -23,7 +23,7 @@ def subscribe(client):
 
     def on_message(client, userdata, msg):
         device_name_in_bytes = b'cicicom-s-lg3t:2'
-        print (msg.payload)
+        print(msg.payload)
         if device_name_in_bytes in msg.payload:
             print("raw payload:", msg.payload)
             # Decode bytes to string
@@ -36,8 +36,6 @@ def subscribe(client):
                 if payload_dict.get('deduplicationId') not in processed_messages:
                     processed_messages.add(payload_dict.get('deduplicationId'))
                     print("Filtered payload:", payload_dict)
-                else:
-                    print("Duplicate message, skipping.")
             except json.decoder.JSONDecodeError:
                 print("json.decoder.JSONDecodeError")
                 pass
@@ -54,6 +52,7 @@ def run():
 
 if __name__ == '__main__':
     
-    topic = "#"
+    #topic = "json/Parking/cicicom-s-lg3t:2"
+    topic = "json/Parking/#"
     
     run()
