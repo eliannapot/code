@@ -1,6 +1,7 @@
 import sqlite3
 from datetime import datetime, timedelta, timezone
 import time
+import os
 
 #Variables taken from payload
 datetime_from_payload = "2024-01-25T18:23:25.339113601+00:00"
@@ -10,7 +11,9 @@ bluetooth_tag_from_payload="SVL283"
 device_ID="0004a30b00e95f14"
 
 # Connect to the SQLite database
-conn = sqlite3.connect('smartparkingSDM.sqlite')
+script_dir = os.path.dirname(__file__)
+database_path = os.path.join(script_dir, '..', 'model', 'database', 'smartparkingSDM.sqlite')
+conn = sqlite3.connect(database_path)
 cursor = conn.cursor()
 
 #Get user's id given the bluetooth tag 

@@ -1,4 +1,5 @@
 import sqlite3
+import os
 
 payload_dict={
     "deduplicationId": "8f1d61e8-18f5-43fa-a873-ed2372a24568",
@@ -75,7 +76,9 @@ controlledProperty="movementActivity"
 deviceCategory="sensor"
 
 # Connect to the SQLite database
-conn = sqlite3.connect('smartparkingSDM.sqlite')
+script_dir = os.path.dirname(__file__)
+database_path = os.path.join(script_dir, '..', 'model', 'database', 'smartparkingSDM.sqlite')
+conn = sqlite3.connect(database_path)
 cursor = conn.cursor()
 
 # Insert the values into the Device table
