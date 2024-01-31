@@ -15,7 +15,7 @@ export let getParkingSiteName = () => {
 
 export let newSiteDateTime = (user, parkingspot, selectedDate, reservation_code, selectedSite, selectedTime) => {
     const query = db.prepare('INSERT INTO Booking VALUES (?, ?, ?, ?, ?, ?)');
-    try {
+    try {   
         query.run(user, parkingspot, selectedDate, reservation_code, selectedSite, selectedTime);
         // console.log("reservation code is: " + reservation_code)
         // console.log("done with try in better-sqlite of newSiteDateTime: " + user, parkingspot, selectedDate, reservation_code, selectedSite, selectedTime);
@@ -69,7 +69,7 @@ export let getBookingDetails = (reservation_code) => {
     let info;
     try {
         info = query.all(reservation_code);
-        console.log("better-sqlite getBookingDetails: ", info);
+        // console.log("better-sqlite getBookingDetails: ", info);
         return info;
     }
     catch (err) {

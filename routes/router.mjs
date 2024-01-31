@@ -110,7 +110,7 @@ router.post('/home/submit-success', async (req,res) => {
 router.get('/reservation', async (req,res) => {
     try {
         const reservation = await homeController.showBookingDetails(req.session.reservation_code);
-        console.log("router reservation: ", reservation);
+        // console.log("router reservation: ", reservation);
         res.render('reservation',{
             reservation: reservation[0]
         });

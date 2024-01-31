@@ -69,7 +69,7 @@ export async function showBookingDetails(reservation) {
 
     try {
         const bookingDetails = await model.getBookingDetails(reservation);
-        console.log("home.mjs showBookingDetails: ", bookingDetails);
+        // console.log("home.mjs showBookingDetails: ", bookingDetails);
         return bookingDetails 
     } catch(err) {
         console.log(err);
