@@ -13,6 +13,19 @@ export let getParkingSiteName = () => {
     }
 }
 
+//getting image for parking area
+export let getParkingSiteImage = (parkingArea) => {
+    const query = db.prepare('SELECT images FROM OffStreetParking WHERE name = ?');
+    let info;
+    try {
+        info = query.all(parkingArea);
+        return info;
+    }
+    catch (err) {
+        throw err;
+    }
+}
+
 export let newSiteDateTime = (user, parkingspot, selectedDate, reservation_code, selectedSite, selectedTime) => {
     const query = db.prepare('INSERT INTO Booking VALUES (?, ?, ?, ?, ?, ?)');
     try {   

@@ -45,6 +45,16 @@ export async function showParkingSite(reservation) {
     }
 }
 
+//To display the picture of the parking area
+export async function showParkingSiteImage(parkingArea) {
+    try {
+        const parkingSitePicture = await model.getParkingSiteImage(parkingArea)
+        return parkingSitePicture
+    } catch(err) {
+        console.log(err);
+    }
+}
+
 //To display the correct Parking Spots of the Area
 export async function showParkingSpots(parkingArea) {
     try {
