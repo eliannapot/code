@@ -27,7 +27,6 @@ router.get('/', (req, res) => {
 
 //Gets the parking site names in the home form
 router.get('/home', async (req,res) => {
-    const site="ECE_1"
     try{
         const parkingSiteNames = await homeController.showParkingSiteName();
         res.render('home',{
@@ -61,16 +60,16 @@ router.post('/home/submit-form',  async (req,res) => {
 
 
 router.get('/home_site', async (req,res) => {
-    const site="ECE_1" 
 
     try {
         //shows parking area chosen in the header
         const site = await homeController.showParkingSite(req.session.reservation_code);
         //console.log("found the area: " + site[0].refOffStreetParking);
         const parkingArea = site[0].refOffStreetParking;
-        
-        // res.render('home_site',{
-        //     site: site[0].refOffStreetParking })
+
+        //shows the correct picture of the parking area
+        const parkingSiteImage = await homeController.showParkingSiteImage(parkingArea);
+        // console.log("parkingSiteImage: ", parkingSiteImage[0].images)
         
         //shows parking spots in the dropdown menu
         const parkingSpotsAvl = await homeController.showParkingSpots(parkingArea);
@@ -82,7 +81,8 @@ router.get('/home_site', async (req,res) => {
         
         res.render('home_site',{
             site: site[0].refOffStreetParking,
-            parkingSpots: listOfParkingSpots
+            parkingSpots: listOfParkingSpots,
+            image : parkingSiteImage[0].images
         });
         //console.log("listOfParkingSpots: ", listOfParkingSpots);
         //return listOfParkingSpots;
@@ -110,7 +110,7 @@ router.post('/home/submit-success', async (req,res) => {
 router.get('/reservation', async (req,res) => {
     try {
         const reservation = await homeController.showBookingDetails(req.session.reservation_code);
-        console.log("router reservation: ", reservation);
+        // console.log("router reservation: ", reservation);
         res.render('reservation',{
             reservation: reservation[0]
         });
