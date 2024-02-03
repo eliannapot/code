@@ -19,7 +19,7 @@ def connect_mqtt():
     return client
 
 def subscribe(client):
-    processed_messages = set()  # Set to store processed messages
+    #processed_messages = set()  # Set to store processed messages
 
     def on_message(client, userdata, msg):
         '''device_name_in_bytes = b'cicicom-s-lg3t:2'
@@ -40,14 +40,14 @@ def subscribe(client):
                 print("json.decoder.JSONDecodeError")
                 pass'''
         
-        print("raw payload=", msg.payload)
+        print("filtered payload=", msg.payload)
             # Decode bytes to string
         payload_str = msg.payload.decode('utf-8')
         payload_str = payload_str.replace("'", '"')
         try:
             # Parse JSON data
             payload_dict = json.loads(payload_str)
-            print("Filtered payload:", payload_dict)
+            print("json payload:", payload_dict)
         except json.decoder.JSONDecodeError:
             print("json.decoder.JSONDecodeError")
             pass
@@ -64,7 +64,8 @@ def run():
 
 if __name__ == '__main__':
     
-    #topic = "json/Parking/cicicom-s-lg3t:2"
-    topic = "json/Parking/#"
+    topic = "json/Parking/cicicom-s-lg3t:2"
+    #topic = "json/Parking/#"
+    #topic = #
     
     run()
