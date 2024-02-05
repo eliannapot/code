@@ -13,68 +13,108 @@ def connect_to_db():
 
 def check_the_booking(client, payload_dict):
 
-    datetime_from_payload = payload_dict['time']
-    date_from_payload = datetime_from_payload[:10]
-    time_from_payload = datetime_from_payload[11:16]
-    bluetooth_tag_from_payload=payload_dict.get('object', {}).get('tag')
-    device_ID= payload_dict["deviceInfo"]["devEui"]
-    
-    conn=connect_to_db()
-    cursor = conn.cursor()
-    
-    #Get user's id given the bluetooth tag 
-    cursor.execute("SELECT user_id FROM User WHERE bt_tag==?",(bluetooth_tag_from_payload,))
-    user_ID_list = cursor.fetchall()
-    if (user_ID_list==[]):
-        print("User is not registered")
-    else:
-        on_time=False
-        user_ID=user_ID_list[0][0]
-        #Get parking spot ID given device ID
+    def save_payload_to_db(payload_dict):
+        print("New Message from Sensor:",device_ID)
+        #Update Device table
+        cursor.execute("UPDATE Device SET (dateLastValueReported,value)=(?,?) WHERE id=?",(datetime_from_payload,bluetooth_tag,device_ID,))    
+        conn.commit()
+
+    def get_parkingspot_id():
         cursor.execute("SELECT id FROM ParkingSpot WHERE refDevice=?",(device_ID,))
         parking_spot_list=cursor.fetchall()
         if (parking_spot_list==[]):
             print("This Device does not refer to any Parking Spot")
         else:
             parking_spot=parking_spot_list[0][0]
-            #Get times that match to the user,date and parking spot
-            cursor.execute("SELECT time FROM Booking WHERE (refUser==? and date=? and refParkingSpot=?)",(user_ID,date_from_payload,parking_spot))
-            times_that_match_list=cursor.fetchall()
-            if (times_that_match_list==[]):
-                print("Wrong Parking. The light stays OFF")
-            else:
-                times_that_match = [item[0] for item in times_that_match_list]
-                # Check if the driver parked on time (payload's time = booking's time +- 10 mins)
-                time_from_payload_formatted = datetime.strptime(time_from_payload, "%H:%M")
-                ten_minutes = timedelta(minutes=10)
-                for time_that_match in times_that_match:
-                    time_formatted = datetime.strptime(time_that_match, "%H:%M")
-                    if (time_from_payload_formatted - ten_minutes <= time_formatted <= time_from_payload_formatted + ten_minutes):
-                        on_time=True    
-                        break
-                    else:
-                        on_time=False
-                if (on_time==True):
-                    print("The driver parked on time. The light is ON for 5 minutes")
-                    #Get Streetlight's ID
-                    cursor.execute("SELECT id FROM Streetlight WHERE refDevice==?",(device_ID,))
-                    streetlight_id_list=cursor.fetchall()
-                    if (streetlight_id_list==[]):
-                        print("This Device does not refer to any Streetlight.")
-                    else:
-                        streetlight_id=streetlight_id_list[0][0]
-                        #Set Streetlight's powerState to 'on'
-                        publish(client,'on')
-                        cursor.execute("UPDATE Streetlight SET powerState='on',dateLastSwitchingOn=? WHERE id=?",(datetime_from_payload,streetlight_id),)
-                        conn.commit()
-                        time.sleep(300)  # 5 minutes = 300 seconds
-                        print("5 minutes passed. The light is OFF")
-                        #Set Streetlight's powerState to 'off'
-                        publish(client,'off')
-                        cursor.execute("UPDATE Streetlight SET powerState='off' WHERE id=?",(streetlight_id,))
-                        conn.commit()
+        return parking_spot
+    
+    def check_if_car_parked():
+        carStatus=payload_dict.get('object', {}).get('carStatus')
+        if (carStatus==1):
+            print("A car parked in the parking spot with ID: "+parking_spot)
+            #Update ParkingSpot's status to occupied
+            cursor.execute("UPDATE ParkingSpot SET status='occupied' WHERE refDevice=?",(device_ID,))
+            conn.commit
+        elif (carStatus==0):
+            print("There is no car parked in the parking spot with ID: "+parking_spot)
+            #Update ParkingSpot's status to free
+            cursor.execute("UPDATE ParkingSpot SET status='free' WHERE refDevice=?",(device_ID,))
+            conn.commit
+        else:
+            print("There has been an error in loading the car status")
+        return carStatus
+
+    def check_if_parking_valid():
+        on_time=False
+        #Get times that match to the user,date and parking spot
+        cursor.execute("SELECT time FROM Booking WHERE (refUser==? and date=? and refParkingSpot=?)",(user_ID,date_from_payload,parking_spot))
+        times_that_match_list=cursor.fetchall()
+        if (times_that_match_list!=[]):
+            times_that_match = [item[0] for item in times_that_match_list]
+            # Check if the driver parked on time (payload's time = booking's time +- 10 mins)
+            time_from_payload_formatted = datetime.strptime(time_from_payload, "%H:%M")
+            ten_minutes = timedelta(minutes=10)
+            for time_that_match in times_that_match:
+                time_formatted = datetime.strptime(time_that_match, "%H:%M")
+                if (time_from_payload_formatted - ten_minutes <= time_formatted <= time_from_payload_formatted + ten_minutes):
+                    on_time=True    
+                    break
                 else:
-                    print("The driver didn't park on time. The light stays OFF")
+                    on_time=False
+        return on_time
+
+    def get_user_id():
+        user_id=""
+        cursor.execute("SELECT user_id FROM User WHERE bt_tag==?",(bluetooth_tag,))
+        user_ID_list = cursor.fetchall()
+        if (user_ID_list==[]):
+             print("User is not registered")
+        else:
+            user_id=user_ID_list[0][0]
+        return user_id
+
+    def open_the_light():
+        #Get Streetlight's ID
+        cursor.execute("SELECT id FROM Streetlight WHERE refDevice==?",(device_ID,))
+        streetlight_id_list=cursor.fetchall()
+        if (streetlight_id_list==[]):
+            print("This Device does not refer to any Streetlight.")
+        else:
+            streetlight_id=streetlight_id_list[0][0]
+            #Set Streetlight's powerState to 'on'
+            publish(client,'on')
+            cursor.execute("UPDATE Streetlight SET powerState='on',dateLastSwitchingOn=? WHERE id=?",(datetime_from_payload,streetlight_id),)
+            conn.commit()
+            time.sleep(300)  # 5 minutes = 300 seconds
+            print("5 minutes passed. The light is OFF")
+            #Set Streetlight's powerState to 'off'
+            publish(client,'off')
+            cursor.execute("UPDATE Streetlight SET powerState='off' WHERE id=?",(streetlight_id,))
+            conn.commit()
+
+   
+    #get variables from payload
+    datetime_from_payload = payload_dict['time']
+    date_from_payload = datetime_from_payload[:10]
+    time_from_payload = datetime_from_payload[11:16]
+    bluetooth_tag=payload_dict.get('object', {}).get('tag')
+    device_ID= payload_dict["deviceInfo"]["devEui"]
+
+    conn=connect_to_db()
+    cursor = conn.cursor()
+        
+    parking_spot=get_parkingspot_id()
+    if (parking_spot):
+        carStatus = check_if_car_parked()
+        if (carStatus):
+            user_ID=get_user_id()
+            if(user_ID):
+                on_time=check_if_parking_valid()
+                if (on_time):
+                    print("The car matches the one from the booking. The light is ON for 5 minutes")
+                    open_the_light()
+                else:
+                    print("There's no parking match based on the app. The light stays OFF")
     conn.close()
 
 
@@ -190,31 +230,7 @@ def generate_fake_data():
     }
     
     return payload_dict
-    
-    
-def save_payload_to_db(payload_dict):
-
-    # Extract values from payload
-    device_ID = payload_dict["deviceInfo"]["devEui"]
-    bluetooth_tag = payload_dict.get('object', {}).get('tag')
-    dateLastValueReported = payload_dict.get('time')
-
-    #Standard Values
-    TYPE="Device"
-    controlledProperty="movementActivity"
-    deviceCategory="sensor"
-    
-    conn=connect_to_db()
-    cursor = conn.cursor()
         
-    #Insert the values into the Device table
-     # cursor.execute("INSERT INTO Device (id, value, dateLastValueReported, type, controlledProperty, deviceCategory) VALUES (?, ?, ?, ?, ?, ?)", (device_ID, bluetooth_tag, dateLastValueReported, TYPE, controlledProperty, deviceCategory))
-
-    #Update ParkingSpot's status to occupied
-    cursor.execute("UPDATE ParkingSpot SET status='occupied' WHERE refDevice=?",(device_ID,))
-    conn.commit()
-    conn.close()
-    
         
 def publish(client,powerState):
     topic = "json/Parking/inteliLIGHT-FRE-220-NEMA-L"
@@ -233,7 +249,7 @@ def publish(client,powerState):
 def run():  
     client = connect_mqtt()
    
-    real_data=True #if True: reads data from MQTT Broker, else reads fake data
+    real_data=False #if True: reads data from MQTT Broker, else reads fake data
 
     if (real_data==True):
         payload=subscribe(client)
@@ -241,7 +257,6 @@ def run():
         payload=generate_fake_data()
 
     if (payload!=None):
-        save_payload_to_db(payload)
         check_the_booking(client, payload)
     else:
         print("There has been an error loading payload")
