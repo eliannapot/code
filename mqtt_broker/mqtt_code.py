@@ -101,20 +101,22 @@ def check_the_booking(client, payload_dict):
     device_ID= payload_dict["deviceInfo"]["devEui"]
 
     conn=connect_to_db()
-    cursor = conn.cursor()
-        
-    parking_spot=get_parkingspot_id()
-    if (parking_spot):
-        carStatus = check_if_car_parked()
-        if (carStatus):
-            user_ID=get_user_id()
-            if(user_ID):
-                on_time=check_if_parking_valid()
-                if (on_time):
-                    print("The car matches the one from the booking. The light is ON for 5 minutes")
-                    open_the_light()
-                else:
-                    print("There's no parking match based on the app. The light stays OFF")
+    try:
+        cursor = conn.cursor()
+        parking_spot=get_parkingspot_id()
+        if (parking_spot):
+            carStatus = check_if_car_parked()
+            if (carStatus):
+                user_ID=get_user_id()
+                if(user_ID):
+                    on_time=check_if_parking_valid()
+                    if (on_time):
+                        print("The car matches the one from the booking. The light is ON for 5 minutes")
+                        open_the_light()
+                    else:
+                        print("There's no parking match based on the app. The light stays OFF")
+    except sqlite3.OperationalError:
+        print("Database not found")
     conn.close()
 
 
