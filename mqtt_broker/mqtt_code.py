@@ -13,7 +13,7 @@ def connect_to_db():
 
 def check_the_booking(client, payload_dict):
 
-    def save_payload_to_db(payload_dict):
+    def save_payload_to_db():
         print("New Message from Sensor:",device_ID)
         #Update Device table
         cursor.execute("UPDATE Device SET (dateLastValueReported,value)=(?,?) WHERE id=?",(datetime_from_payload,bluetooth_tag,device_ID,))    
@@ -34,12 +34,12 @@ def check_the_booking(client, payload_dict):
             print("A car parked in the parking spot with ID: "+parking_spot)
             #Update ParkingSpot's status to occupied
             cursor.execute("UPDATE ParkingSpot SET status='occupied' WHERE refDevice=?",(device_ID,))
-            conn.commit
+            conn.commit()
         elif (carStatus==0):
             print("There is no car parked in the parking spot with ID: "+parking_spot)
             #Update ParkingSpot's status to free
             cursor.execute("UPDATE ParkingSpot SET status='free' WHERE refDevice=?",(device_ID,))
-            conn.commit
+            conn.commit()
         else:
             print("There has been an error in loading the car status")
         return carStatus
@@ -67,29 +67,27 @@ def check_the_booking(client, payload_dict):
         user_id=""
         cursor.execute("SELECT user_id FROM User WHERE bt_tag==?",(bluetooth_tag,))
         user_ID_list = cursor.fetchall()
-        if (user_ID_list==[]):
-             print("User is not registered")
-        else:
+        if (user_ID_list!=[]):
             user_id=user_ID_list[0][0]
         return user_id
 
     def open_the_light():
         #Get Streetlight's ID
-        cursor.execute("SELECT id FROM Streetlight WHERE refDevice==?",(device_ID,))
-        streetlight_id_list=cursor.fetchall()
-        if (streetlight_id_list==[]):
+        cursor.execute("SELECT * FROM Streetlight WHERE refDevice==?",(device_ID,))
+        streetlight_list=cursor.fetchall()
+        if (streetlight_list==[]):
             print("This Device does not refer to any Streetlight.")
         else:
-            streetlight_id=streetlight_id_list[0][0]
+            streetlight_info=streetlight_list[0]
             #Set Streetlight's powerState to 'on'
-            publish(client,'on')
-            cursor.execute("UPDATE Streetlight SET powerState='on',dateLastSwitchingOn=? WHERE id=?",(datetime_from_payload,streetlight_id),)
+            publish(client,streetlight_info,'on',datetime_from_payload)
+            cursor.execute("UPDATE Streetlight SET powerState='on',dateLastSwitchingOn=? WHERE id=?",(datetime_from_payload,streetlight_info[0]),)
             conn.commit()
             time.sleep(300)  # 5 minutes = 300 seconds
             print("5 minutes passed. The light is OFF")
             #Set Streetlight's powerState to 'off'
-            publish(client,'off')
-            cursor.execute("UPDATE Streetlight SET powerState='off' WHERE id=?",(streetlight_id,))
+            publish(client,streetlight_info,'off')
+            cursor.execute("UPDATE Streetlight SET powerState='off' WHERE id=?",(streetlight_info[0],))
             conn.commit()
 
    
@@ -101,8 +99,9 @@ def check_the_booking(client, payload_dict):
     device_ID= payload_dict["deviceInfo"]["devEui"]
 
     conn=connect_to_db()
+    cursor = conn.cursor()
     try:
-        cursor = conn.cursor()
+        save_payload_to_db()
         parking_spot=get_parkingspot_id()
         if (parking_spot):
             carStatus = check_if_car_parked()
@@ -113,63 +112,19 @@ def check_the_booking(client, payload_dict):
                     if (on_time):
                         print("The car matches the one from the booking. The light is ON for 5 minutes")
                         open_the_light()
-                    else:
-                        print("There's no parking match based on the app. The light stays OFF")
+            if (not(user_ID) or not(on_time)):
+                print("There's no parking match based on the app. The light stays OFF")
     except sqlite3.OperationalError:
         print("Database not found")
     conn.close()
 
 
-def connect_mqtt(): 
-    def on_connect(client, userdata, flags,rc):
-        if rc == 0:
-            print("Connected to MQTT Broker!")
-        else:
-            print("Failed to connect, return code %d\n", rc)
-    
-    broker = '150.140.186.118'
-    port = 1883
-    client_id = "elianna"
-    client = mqtt_client.Client(client_id)
-    client.on_connect = on_connect
-    client.connect(broker, port)
-    return client
-
-
-def subscribe(client):
-    
-    payload_dict = None
-    
-    def on_message(client, userdata, msg):
-        nonlocal payload_dict
-        print("raw payload=", msg.payload)
-            # Decode bytes to string
-        payload_str = msg.payload.decode('utf-8')
-        payload_str = payload_str.replace("'", '"')
-        try:
-            # Parse JSON data
-            payload_dict = json.loads(payload_str)
-            print("Filtered payload:", payload_dict)
-        except json.decoder.JSONDecodeError:
-            print("json.decoder.JSONDecodeError")
-            pass
-        
-    topic = "json/Parking/#"
-    client.subscribe(topic)
-    client.on_message = on_message
-    
-    while payload_dict is None:
-        client.loop()  # Process incoming messages
-        time.sleep(0.1)
-    
-    return payload_dict
-    
             
 def generate_fake_data():
     
     payload_dict={
         "deduplicationId": "8f1d61e8-18f5-43fa-a873-ed2372a24568",
-        "time": "2024-01-25T18:23:25.339113601+00:00",
+        "time": "2024-01-25T18:43:25.339113601+00:00",
         "deviceInfo": {
             "tenantId": "063a0ecb-e8c2-4a13-975a-93d791e8d40c",
             "tenantName": "Smart Campus",
@@ -232,14 +187,56 @@ def generate_fake_data():
     }
     
     return payload_dict
+
+
+def connect_mqtt(): 
+    def on_connect(client, userdata, flags,rc):
+        if rc == 0:
+            print("Connected to MQTT Broker!")
+        else:
+            print("Failed to connect, return code %d\n", rc)
+    
+    broker = '150.140.186.118'
+    port = 1883
+    client_id = "elianna"
+    client = mqtt_client.Client(client_id)
+    client.on_connect = on_connect
+    client.connect(broker, port)
+    return client
+
+
+def subscribe(client):
+    
+    payload_dict = None
+    
+    def on_message(client, userdata, msg):
+        nonlocal payload_dict
+        print("raw payload=", msg.payload)
+            # Decode bytes to string
+        payload_str = msg.payload.decode('utf-8')
+        payload_str = payload_str.replace("'", '"')
+        try:
+            # Parse JSON data
+            payload_dict = json.loads(payload_str)
+            print("Filtered payload:", payload_dict)
+        except json.decoder.JSONDecodeError:
+            print("json.decoder.JSONDecodeError")
+            pass
         
-        
-def publish(client,powerState):
+    topic = "json/Parking/#"
+    client.subscribe(topic)
+    client.on_message = on_message
+    
+    while payload_dict is None:
+        client.loop()  # Process incoming messages
+        time.sleep(0.1)
+    
+    return payload_dict
+    
+
+def publish(client,streetlightInfo,powerState,dateLastSwitchingOn):
     topic = "json/Parking/inteliLIGHT-FRE-220-NEMA-L"
-    if (powerState=='on'):
-        msg = f"streetlightInfo: {{'powerState':'on'}}"
-    else:
-         msg = f"streetlightInfo: {{'powerState':'off'}}"
+    msg = f"{{'id':'{streetlightInfo[0]}','location':{streetlightInfo[1]},'status':'{streetlightInfo[2]}', 'type':'{streetlightInfo[3]}', 'powerState':'{powerState}','dateLastSwitchingOn':'{dateLastSwitchingOn}','refDevice':'{streetlightInfo[6]}' }}"
     result = client.publish(topic, msg)
     status = result[0]
     if status == 0:
