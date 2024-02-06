@@ -211,19 +211,19 @@ def subscribe(client):
     
     def on_message(client, userdata, msg):
         nonlocal payload_dict
-        print("raw payload=", msg.payload)
-            # Decode bytes to string
+        #print("raw payload=", msg.payload)
+        # Decode bytes to string
         payload_str = msg.payload.decode('utf-8')
         payload_str = payload_str.replace("'", '"')
         try:
             # Parse JSON data
             payload_dict = json.loads(payload_str)
-            print("Filtered payload:", payload_dict)
+            #print("Filtered payload:", payload_dict)
         except json.decoder.JSONDecodeError:
             print("json.decoder.JSONDecodeError")
             pass
         
-    topic = "json/Parking/#"
+    topic = "json/Parking/cicicom-s-lg3t:2"
     client.subscribe(topic)
     client.on_message = on_message
     
