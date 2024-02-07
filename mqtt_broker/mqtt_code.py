@@ -70,7 +70,7 @@ def check_the_booking(client, payload_dict):
         return on_time
 
     def get_user_id():
-        user_id=""
+        user_id=0
         cursor.execute("SELECT user_id FROM User WHERE bt_tag==?",(bluetooth_tag,))
         user_ID_list = cursor.fetchall()
         if (user_ID_list!=[]):
@@ -110,7 +110,8 @@ def check_the_booking(client, payload_dict):
     datetime_from_payload = payload_dict['time']
     date_from_payload = datetime_from_payload[:10]
     time_from_payload = datetime_from_payload[11:16]
-
+    user_ID=0
+    
     conn=connect_to_db()
     cursor = conn.cursor()
     try:
@@ -126,9 +127,9 @@ def check_the_booking(client, payload_dict):
                         print("The car matches the one from the booking. The light is ON for 5 minutes")
                         print()
                         open_the_light()
-            if (not(user_ID) or not(on_time)):
-                print("There's no parking match based on the app. The light stays OFF")
-                print()
+                if (not(user_ID) or not(on_time)):
+                    print("There's no parking match based on the app. The light stays OFF")
+                    print()
     except sqlite3.OperationalError:
         print("Database not found")
         print()
