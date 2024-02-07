@@ -287,7 +287,7 @@ def patch(powerState,dateLastSwitchingOn):
 def run():  
     client = connect_mqtt()
    
-    real_data=True #if True: reads data from MQTT Broker, else reads fake data
+    real_data=False #if True: reads data from MQTT Broker, else reads fake data
 
     if (real_data==True):
         payload=subscribe(client)
