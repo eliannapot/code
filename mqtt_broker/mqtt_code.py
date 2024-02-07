@@ -252,8 +252,7 @@ def subscribe(client):
 
 def publish(client,streetlightInfo,powerState,dateLastSwitchingOn):
     topic = "json/Parking/inteliLIGHT-FRE-220-NEMA-L"
-    msg = f"{{'id':'{streetlightInfo[0]}','location':{streetlightInfo[1]},'status':'{streetlightInfo[2]}', 'type':'{streetlightInfo[3]}',
-    'powerState':'{powerState}','dateLastSwitchingOn':'{dateLastSwitchingOn}','refDevice':'{streetlightInfo[6]}' }}"
+    msg = f"{{'id':'{streetlightInfo[0]}','location':{streetlightInfo[1]},'status':'{streetlightInfo[2]}', 'type':'{streetlightInfo[3]}','powerState':'{powerState}','dateLastSwitchingOn':'{dateLastSwitchingOn}','refDevice':'{streetlightInfo[6]}' }}"
     result = client.publish(topic, msg)
     status = result[0]
     if status == 0:
@@ -288,7 +287,7 @@ def patch(powerState,dateLastSwitchingOn):
 def run():  
     client = connect_mqtt()
    
-    real_data=False #if True: reads data from MQTT Broker, else reads fake data
+    real_data=True #if True: reads data from MQTT Broker, else reads fake data
 
     if (real_data==True):
         payload=subscribe(client)
