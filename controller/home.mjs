@@ -2,7 +2,7 @@ const model = await import(`../model/better-sqlite/better-sqlite.mjs`)
 
 
 //Default User
-let defaultUser = "Elianna" ; 
+let defaultUser = "Stellini" ; 
 
 
 //To display the correct ECE Areas
